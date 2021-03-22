@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Strike core check</title>
+  </head>
+  <body>
+    <h1>Strike core check</h1>
+    <pre id="log"></pre>
+    <div id="r"></div>
+    <div id="a"><i>ph</i></div>
+    <div id="b"><i>ph</i></div>
+    <script type="module">
+      import { h, render } from '../index.js';
+      import { useState } from '../hooks.js';
+      import { mount } from '../mount.js';
+
+      const log = document.getElementById('log');
+      const lines = [];
+      function ok(name, cond) {
+        lines.push((cond ? 'PASS' : 'FAIL') + ' - ' + name);
+        log.textContent = lines.join('\n');
+        if (!cond) console.error('FAIL', name);
+      }
+
+      // 1. in-place render
+      const r = document.getElementById('r');
+      render(h('p', null, 'one'), r);
+      const p = r.firstChild;
+      render(h('p', null, 'two'), r);
+      ok('1 in-place render', r.firstChild === p && p.textContent === 'two');
+
+      // 2 + 5. independent islands
+      function Counter({ id }) {
+        const [n, setN] = useState(0);
+        return h('button', { id, onClick: () => setN(n + 1) }, String(n));
+      }
+      mount('#a', Counter, { id: 'btn-a' });
+      mount('#b', Counter, { id: 'btn-b' });
+      document.getElementById('btn-a').click();
+      queueMicrotask(() => {
+        ok('2 independent mounts', document.getElementById('btn-a').textContent === '1');
+        ok('5 sibling isolation', document.getElementById('btn-b').textContent === '0');
+
+        // 4. second mount keeps state, updates props
+        function Labeled({ label }) {
+          const [n, setN] = useState(0);
+          return h(
+            'button',
+            { id: 'lbl', onClick: () => setN(x => x + 1) },
+            label + ':' + n
+          );
+        }
+        const host = document.createElement('div');
+        host.innerHTML = '<i>Loading</i>';
+        document.body.append(host);
+        mount(host, Labeled, { label: 'A' });
+        document.getElementById('lbl').click();
+        queueMicrotask(() => {
+          mount(host, Labeled, { label: 'B' });
+          ok('4 second mount keeps state', host.textContent === 'B:1');
+
+          // 3. keyed reorder
+          function List({ order }) {
+            return h(
+              'div',
+              { id: 'list' },
+              order.map(id => h('input', { key: id, id: 'k' + id }))
+            );
+          }
+          const box = document.createElement('div');
+          document.body.append(box);
+          render(h(List, { order: ['a', 'b'] }), box);
+          const kb = box.querySelector('#kb');
+          render(h(List, { order: ['b', 'a'] }), box);
+          ok('3 keyed identity', box.querySelector('#kb') === kb);
+
+          const failed = lines.some(l => l.startsWith('FAIL'));
+          lines.push(failed ? '\nSOME CHECKS FAILED' : '\nALL CHECKS PASSED');
+          log.textContent = lines.join('\n');
+        });
+      });
+    </script>
+  </body>
+</html>
