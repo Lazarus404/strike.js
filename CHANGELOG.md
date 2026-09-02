@@ -12,6 +12,7 @@ All notable changes to this project are documented in this file.
 - Strike UI controls: `form`, `switch`, `dialog` (portal), `radio-group`, `number-field`, `btn-group`, `toggle-group`, `autocomplete`; catalog also includes `stack`, `text`, `btn`, `field`, `check`, `select`, `image`
 - Package exports for `html`, `debug`, `ui`, and `ui/*`
 - Dist bundles: `strike.js`, `strike.core+hooks.js`, `strike-ui.js`, JSX runtime, tokens/UI CSS
+- npm package `strike-fw` (exports, `files`, types, `sideEffects`, `prepublishOnly`; product name remains strike.js)
 - Hydration helpers: `hydrate()`, `mount` with `data-hydrate` / `data-props`, strip `data-hydrate` after attach
 - Examples (todo, login, site SPA) and repo demo that consumes dist only
 

@@ -1,6 +1,6 @@
 /**
  * Dev helpers. Import only in development.
- *   import { installDebug } from 'strike/debug';
+ *   import { installDebug } from 'strike-fw/debug';
  *   installDebug();
  */
 import options from './src/options.js';

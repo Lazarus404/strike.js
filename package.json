@@ -1,27 +1,130 @@
 {
-  "name": "strike",
+  "name": "strike-fw",
   "version": "0.2.0",
+  "description": "Small browser VDOM runtime with hooks, JSX, html templates, and an optional UI catalog",
   "type": "module",
-  "private": true,
   "license": "MIT",
+  "author": "Jahred Love",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lazarus404/strike.js.git"
+  },
+  "homepage": "https://github.com/Lazarus404/strike.js#readme",
+  "bugs": {
+    "url": "https://github.com/Lazarus404/strike.js/issues"
+  },
+  "keywords": [
+    "vdom",
+    "jsx",
+    "ui",
+    "hooks",
+    "lightweight",
+    "components",
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "./index.js",
+    "./mount.js",
+    "./hooks.js",
+    "./src/patch.js",
+    "./css.js",
+    "./ui/**/*.js",
+    "*.css",
+    "./ui.css",
+    "./ui/tokens.css"
+  ],
+  "main": "./index.js",
+  "types": "./types/index.d.ts",
   "exports": {
-    ".": "./index.js",
-    "./hooks": "./hooks.js",
-    "./jsx-runtime": "./jsx-runtime.js",
-    "./jsx-dev-runtime": "./jsx-dev-runtime.js",
-    "./html": "./html.js",
-    "./css": "./css.js",
-    "./ce": "./define.js",
-    "./debug": "./debug.js",
-    "./ui": "./ui/index.js",
-    "./ui/*": "./ui/*",
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./hooks": {
+      "types": "./types/hooks.d.ts",
+      "import": "./hooks.js",
+      "default": "./hooks.js"
+    },
+    "./jsx-runtime": {
+      "types": "./types/jsx-runtime.d.ts",
+      "import": "./jsx-runtime.js",
+      "default": "./jsx-runtime.js"
+    },
+    "./jsx-dev-runtime": {
+      "types": "./types/jsx-runtime.d.ts",
+      "import": "./jsx-dev-runtime.js",
+      "default": "./jsx-dev-runtime.js"
+    },
+    "./html": {
+      "types": "./types/html.d.ts",
+      "import": "./html.js",
+      "default": "./html.js"
+    },
+    "./css": {
+      "types": "./types/css.d.ts",
+      "import": "./css.js",
+      "default": "./css.js"
+    },
+    "./ce": {
+      "types": "./types/define.d.ts",
+      "import": "./define.js",
+      "default": "./define.js"
+    },
+    "./debug": {
+      "types": "./types/debug.d.ts",
+      "import": "./debug.js",
+      "default": "./debug.js"
+    },
+    "./ui": {
+      "types": "./types/ui/index.d.ts",
+      "import": "./ui/index.js",
+      "default": "./ui/index.js"
+    },
+    "./ui.css": "./ui.css",
+    "./ui/tokens.css": "./ui/tokens.css",
+    "./ui/*.js": {
+      "types": "./types/ui/*.d.ts",
+      "import": "./ui/*.js",
+      "default": "./ui/*.js"
+    },
+    "./ui/*": {
+      "types": "./types/ui/*.d.ts",
+      "import": "./ui/*",
+      "default": "./ui/*"
+    },
+    "./dist/*": "./dist/*",
     "./package.json": "./package.json"
   },
+  "files": [
+    "index.js",
+    "hooks.js",
+    "html.js",
+    "css.js",
+    "debug.js",
+    "define.js",
+    "mount.js",
+    "jsx-runtime.js",
+    "jsx-dev-runtime.js",
+    "src",
+    "ui",
+    "ui.css",
+    "types",
+    "dist",
+    "assets/strike-logo.png",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "node build.mjs",
     "build:jsx": "node build-jsx.mjs",
     "test": "node --test",
-    "size": "node size.mjs"
+    "size": "node size.mjs",
+    "prepublishOnly": "npm test && node build.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",

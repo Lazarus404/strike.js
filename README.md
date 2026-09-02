@@ -2,41 +2,72 @@
   <img src="assets/strike-logo.png" alt="strike.js" width="420" />
 </p>
 
-Small VDOM runtime (`strike.js`) plus an optional UI catalog (`strike/ui/*`).
+<small align="center">
+
+[![npm](https://img.shields.io/npm/v/strike-fw.svg)](https://www.npmjs.com/package/strike-fw)
+[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/strike-fw/badge)](https://www.jsdelivr.com/package/npm/strike-fw)
+
+</small>
+
+Small browser VDOM runtime plus an optional UI catalog. Requires a DOM (not a Node-first server runtime).
+
+```bash
+npm i strike-fw
+```
 
 ## Runtime
 
-```bash
-npm test
-node build.mjs
-node size.mjs
+```js
+import { h, render, mount } from 'strike-fw';
+import { useState } from 'strike-fw/hooks';
 ```
 
-- `dist/strike.js` - core
-- `dist/strike.core+hooks.js` - core + hooks
+CDN (core + hooks):
 
-```js
-import { h, render, mount } from './index.js';
-import { useState } from './hooks.js';
+```html
+<script type="module">
+  import { h, render, useState } from 'https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/dist/strike.core+hooks.js';
+</script>
+```
+
+Also on unpkg: `https://unpkg.com/strike-fw@0.2.0/dist/strike.core+hooks.js`.
+
+Prebuilt files under `dist/` (after install or `npm run build`):
+
+| File | Role | ~gzip |
+|------|------|-------|
+| `dist/strike.js` | core | ~5.0kb |
+| `dist/strike.core+hooks.js` | core + hooks | ~5.8kb |
+| `dist/strike-ui.js` | UI catalog (imports core) | ~4.3kb |
+| `dist/html.js` | `html` templates | ~1.1kb |
+
+```bash
+npm test
+npm run build
+npm run size
 ```
 
 ## JSX
 
-Automatic runtime (`jsx-runtime.js`) — no `h` import in app source:
+Automatic runtime — no `h` import in app source:
 
-```bash
-npm run build:jsx
+```js
+// bundler: jsx: 'automatic', jsxImportSource: 'strike-fw'
+import { useState } from 'strike-fw/hooks';
+
+export function Counter() {
+  const [n, setN] = useState(0);
+  return <button type="button" onClick={() => setN(n + 1)}>{n}</button>;
+}
 ```
 
-`jsx: 'automatic'` + `jsxImportSource: 'strike'`. Classic `jsxFactory: 'h'` still works.
+Classic `jsxFactory: 'h'` still works with `import { h } from 'strike-fw'`.
 
 ## No-build `html`
 
-When you cannot compile JSX:
-
 ```js
-import { html } from './html.js';
-import { render } from './index.js';
+import { html } from 'strike-fw/html';
+import { render } from 'strike-fw';
 
 render(html`<button .disabled=${busy} @click=${save}>Save</button>`, root);
 ```
@@ -50,6 +81,8 @@ Prefixes: `.prop`, `?bool`, `@event`. Still VNodes — same `diff` as JSX.
 ```
 
 ```js
+import { mount } from 'strike-fw';
+
 mount('#cart', Cart); // or mount(el, Cart, null, { hydrate: true })
 ```
 
@@ -57,47 +90,40 @@ First attach reuses matching markup; later `mount` updates without wiping state.
 
 ## Strike UI
 
-Drop-in controls. Import only what you need (do not load unused widgets):
+Import only what you need:
 
 ```js
-import { Btn } from './ui/btn.js';
-import { Field } from './ui/field.js';
-import { Dialog } from './ui/dialog.js';
+import { Btn } from 'strike-fw/ui/btn.js';
+import { Field } from 'strike-fw/ui/field.js';
+import { Dialog } from 'strike-fw/ui/dialog.js';
 ```
 
-Link tokens when hosting a page:
+Or the barrel: `import { Btn, Field } from 'strike-fw/ui'`.
 
 ```html
-<link rel="stylesheet" href="/strike/ui/tokens.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/tokens.css" />
 ```
 
-Optional all-in CSS: `ui.css`. Optional all-controls JS bundle:
+Optional all-in CSS: `strike-fw/ui.css`. Optional CDN UI bundle: `dist/strike-ui.js` (peer to `dist/strike.core+hooks.js`).
 
-```bash
-node build.mjs   # dist/strike.js, strike.core+hooks.js, strike-ui.js, html.js, css
-```
-
-Per-control modules self-inject CSS via `css\`. The catalog is never folded into `dist/strike.js`.
+Per-control modules self-inject CSS via the `css` tagged template. The catalog is never folded into `dist/strike.js`.
 
 Controls: `stack`, `text`, `btn`, `field`, `check`, `select`, `image`, `form`, `switch`, `dialog`, `radio-group`, `number-field`, `btn-group`, `toggle-group`, `autocomplete`.
-
-## Demo
-
-For a demonstration, check out the [Harbour Goods](https://github.com/Lazarus404/strike.js-demo) example
 
 ## Debug
 
 ```js
-import { installDebug } from './debug.js';
+import { installDebug } from 'strike-fw/debug';
 const stop = installDebug(); // logs diffs / hydrate mismatches
 ```
 
-## Demos
+## Demo
 
-In-package examples (source imports):
+[Harbor Goods](https://github.com/Lazarus404/strike.js-demo) — ecommerce SPA that consumes Strike dist only.
+
+In-repo examples (relative source imports):
 
 ```bash
-cd strike
 npm run build:jsx
 python3 -m http.server 8080
 ```
@@ -106,26 +132,18 @@ python3 -m http.server 8080
 - [http://localhost:8080/examples/login/](http://localhost:8080/examples/login/)
 - [http://localhost:8080/examples/site/](http://localhost:8080/examples/site/)
 
+## Publishing (maintainers)
+
+No remote CI — run locally before a release:
+
+1. `npm test`
+2. `npm run build && npm run size`
+3. `npm pack --dry-run` (confirm no `test/`, `examples/`, secrets)
+4. `npm publish --access public`
+5. `git tag v0.2.0 && git push --tags`
+
+`prepublishOnly` runs `npm test && node build.mjs` so `dist/` is always in the tarball.
+
 ## Licence
 
-MIT License
-
-Copyright (c) 2021 Jahred Love
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+[MIT](./LICENSE) — Copyright (c) 2021 Jahred Love
