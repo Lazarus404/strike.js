@@ -1,4 +1,5 @@
 node_modules/
-tmp-jsx-test/
 dist/
-.tmp-node/
+/tmp-jsx-test/
+
+.DS_Store

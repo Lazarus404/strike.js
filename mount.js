@@ -48,6 +48,7 @@ function mountOne(host, component, props, opts) {
 		render(vnode, host);
 	} else if (wantsHydrate) {
 		hydrate(vnode, host);
+		if (host.removeAttribute) host.removeAttribute('data-hydrate');
 	} else {
 		host.textContent = '';
 		render(vnode, host);

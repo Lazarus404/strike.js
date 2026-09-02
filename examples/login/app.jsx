@@ -1,4 +1,4 @@
-import { h, mount } from '../../index.js';
+import { mount } from '../../index.js';
 import { useState } from '../../hooks.js';
 import { Btn } from '../../ui/btn.js';
 import { Field } from '../../ui/field.js';

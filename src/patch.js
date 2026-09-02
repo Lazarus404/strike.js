@@ -460,6 +460,8 @@ function firstDom(children) {
 	for (let i = 0; i < children.length; i++) {
 		const c = children[i];
 		if (!c) continue;
+		// Portal content lives under _parentDom, not this parent.
+		if (c.props && c.props._parentDom) continue;
 		if (c._dom) return c._dom;
 		const d = firstDom(c._children);
 		if (d) return d;
@@ -471,6 +473,7 @@ function nextStableDom(kids, start) {
 	for (let i = start; i < kids.length; i++) {
 		const c = kids[i];
 		if (!c || c._flags & INSERT) continue;
+		if (c.props && c.props._parentDom) continue;
 		if (c._dom) return c._dom;
 		const d = firstDom(c._children);
 		if (d) return d;
@@ -488,22 +491,24 @@ function place(parent, dom, before) {
 
 function applyProps(dom, props, oldProps, isSvg, hydrating) {
 	for (const name in oldProps) {
-		if (name === 'children' || name === 'key' || name === 'ref') continue;
+		if (SKIP[name]) continue;
 		if (!(name in props)) setProp(dom, name, null, oldProps[name], isSvg);
 	}
 	for (const name in props) {
-		if (
-			name === 'children' ||
-			name === 'key' ||
-			name === 'ref' ||
-			name === 'dangerouslySetInnerHTML'
-		)
-			continue;
+		if (SKIP[name] || name === 'dangerouslySetInnerHTML') continue;
 		const value = props[name];
 		if (hydrating && (name === 'value' || name === 'checked')) continue;
 		if (oldProps[name] === value) continue;
 		setProp(dom, name, value, oldProps[name], isSvg);
 	}
+}
+
+const SKIP = { children: 1, key: 1, ref: 1 };
+
+function setAttr(dom, name, value) {
+	if (value == null || value === false) dom.removeAttribute(name);
+	else if (value === true) dom.setAttribute(name, '');
+	else dom.setAttribute(name, value);
 }
 
 function setProp(dom, name, value, old, isSvg) {
@@ -531,9 +536,7 @@ function setProp(dom, name, value, old, isSvg) {
 			}
 			return;
 		}
-		if (value == null || value === false) dom.removeAttribute(attr);
-		else if (value === true) dom.setAttribute(attr, '');
-		else dom.setAttribute(attr, value);
+		setAttr(dom, attr, value);
 		return;
 	}
 
@@ -551,9 +554,7 @@ function setProp(dom, name, value, old, isSvg) {
 		} catch (_) {}
 	}
 	if (typeof value === 'function') return;
-	if (value == null || value === false) dom.removeAttribute(name);
-	else if (value === true) dom.setAttribute(name, '');
-	else dom.setAttribute(name, value);
+	setAttr(dom, name, value);
 }
 
 const SVG_ATTR = {

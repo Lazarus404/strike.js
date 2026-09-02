@@ -22,13 +22,38 @@ import { useState } from './hooks.js';
 
 ## JSX
 
-Examples are authored as `.jsx` and compiled with esbuild **0.9.6**:
+Automatic runtime (`jsx-runtime.js`) — no `h` import in app source:
 
 ```bash
-npm run build:jsx   # examples/*/app.jsx -> examples/*/app.js
+npm run build:jsx
 ```
 
-In source, import `h` (and `Fragment` if needed). Build sets `jsxFactory: 'h'`, `jsxFragment: 'Fragment'` (see `build-jsx.mjs`). `jsx-runtime.js` is also available for automatic-runtime bundlers.
+`jsx: 'automatic'` + `jsxImportSource: 'strike'`. Classic `jsxFactory: 'h'` still works.
+
+## No-build `html`
+
+When you cannot compile JSX:
+
+```js
+import { html } from './html.js';
+import { render } from './index.js';
+
+render(html`<button .disabled=${busy} @click=${save}>Save</button>`, root);
+```
+
+Prefixes: `.prop`, `?bool`, `@event`. Still VNodes — same `diff` as JSX.
+
+## Islands / hydrate
+
+```html
+<div id="cart" data-hydrate data-props='{"n":2}'></div>
+```
+
+```js
+mount('#cart', Cart); // or mount(el, Cart, null, { hydrate: true })
+```
+
+First attach reuses matching markup; later `mount` updates without wiping state.
 
 ## Strike UI
 
@@ -37,6 +62,7 @@ Drop-in controls. Import only what you need (do not load unused widgets):
 ```js
 import { Btn } from './ui/btn.js';
 import { Field } from './ui/field.js';
+import { Dialog } from './ui/dialog.js';
 ```
 
 Link tokens when hosting a page:
@@ -48,12 +74,23 @@ Link tokens when hosting a page:
 Optional all-in CSS: `ui.css`. Optional all-controls JS bundle:
 
 ```bash
-node build-ui.mjs   # writes dist/strike-ui.js
+node build.mjs   # dist/strike.js, strike.core+hooks.js, strike-ui.js, html.js, css
 ```
 
 Per-control modules self-inject CSS via `css\`\``. The catalog is never folded into `dist/strike.js`.
 
-Controls: `stack`, `text`, `btn`, `field`, `check`, `select`, `image`.
+Controls: `stack`, `text`, `btn`, `field`, `check`, `select`, `image`, `form`, `switch`, `dialog`, `radio-group`, `number-field`, `btn-group`, `toggle-group`, `autocomplete`.
+
+## Demo
+
+For a demonstration, check out the [Harbour Goods](https://github.com/Lazarus404/strike.js-demo) example
+
+## Debug
+
+```js
+import { installDebug } from './debug.js';
+const stop = installDebug(); // logs diffs / hydrate mismatches
+```
 
 ## Demos
 

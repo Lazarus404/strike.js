@@ -1,21 +1,30 @@
 {
   "name": "strike",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "private": true,
   "license": "MIT",
-  "engines": {
-    "node": ">=14.16.0"
+  "exports": {
+    ".": "./index.js",
+    "./hooks": "./hooks.js",
+    "./jsx-runtime": "./jsx-runtime.js",
+    "./jsx-dev-runtime": "./jsx-dev-runtime.js",
+    "./html": "./html.js",
+    "./css": "./css.js",
+    "./ce": "./define.js",
+    "./debug": "./debug.js",
+    "./ui": "./ui/index.js",
+    "./ui/*": "./ui/*",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "node build.mjs",
-    "build:ui": "node build-ui.mjs",
     "build:jsx": "node build-jsx.mjs",
-    "test": "node test/run.mjs",
+    "test": "node --test",
     "size": "node size.mjs"
   },
   "devDependencies": {
-    "esbuild": "0.9.6",
-    "linkedom": "0.5.6"
+    "esbuild": "^0.25.0",
+    "linkedom": "^0.18.0"
   }
 }

@@ -1,9 +1,8 @@
 import { h } from './src/graph.js';
 
 /**
- * Original tagged-template to h(). Not htm, not lit-html.
- * Supports: tags, attributes, boolean attrs, nested children, components.
- * No spread props or namespaced attrs.
+ * Tagged template -> VNodes (htm-class, not lit-html).
+ * Attr prefixes: .prop  ?bool  @event  (compiled to DOM props / bool attrs / on*).
  */
 export function html(strings, ...values) {
 	const src = build(strings, values);
@@ -31,14 +30,13 @@ function build(strings, values) {
 function parse(src, map) {
 	const out = [];
 	const re =
-		/<!--[\s\S]*?-->|<\/([a-zA-Z][\w:-]*)\s*>|<([a-zA-Z][\w:-]*)([^>]*?)(\/?)>|([^<]+)/g;
+		/<!--[\s\S]*?-->|<\/([^\s>]+)\s*>|<([a-zA-Z\0][^\s>/]*)([^>]*?)(\/?)>|([^<]+)/g;
 	const stack = [{ children: out, type: null }];
 
 	let m;
 	while ((m = re.exec(src))) {
 		if (m[0].startsWith('<!--')) continue;
 		if (m[1]) {
-			// close
 			if (stack.length > 1) stack.pop();
 			continue;
 		}
@@ -46,7 +44,7 @@ function parse(src, map) {
 			const tag = m[2];
 			const attrs = parseAttrs(m[3], map);
 			const selfClose = m[4] === '/' || VOID[tag.toLowerCase()];
-			const type = resolveType(tag, attrs, map);
+			const type = resolveType(tag, map);
 			const vnode = { type, props: attrs, children: [] };
 			stack[stack.length - 1].children.push(vnode);
 			if (!selfClose) stack.push(vnode);
@@ -54,9 +52,9 @@ function parse(src, map) {
 		}
 		if (m[5] != null) {
 			const parts = splitText(m[5], map);
-			for (const p of parts) {
-				if (p === '' || p == null) continue;
-				if (typeof p === 'boolean') continue;
+			for (let i = 0; i < parts.length; i++) {
+				const p = parts[i];
+				if (p === '' || p == null || p === false || p === true) continue;
 				stack[stack.length - 1].children.push(p);
 			}
 		}
@@ -67,15 +65,19 @@ function parse(src, map) {
 
 function toVNode(node) {
 	if (node == null || typeof node !== 'object' || !('type' in node)) return node;
-	const props = { ...node.props };
-	const kids = node.children.map(toVNode).filter(c => c !== '' && c != null && c !== false);
+	const props = {};
+	for (const k in node.props) props[k] = node.props[k];
+	const kids = [];
+	for (let i = 0; i < node.children.length; i++) {
+		const c = toVNode(node.children[i]);
+		if (c !== '' && c != null && c !== false) kids.push(c);
+	}
 	if (kids.length === 1) props.children = kids[0];
 	else if (kids.length > 1) props.children = kids;
 	return h(node.type, props);
 }
 
-function resolveType(tag, attrs, map) {
-	// Dynamic tag: <${Comp} /> becomes tag like "\00\0" 
+function resolveType(tag, map) {
 	const dyn = tag.match(/^\0(\d+)\0$/);
 	if (dyn) return map[+dyn[1]].value;
 	return tag;
@@ -85,24 +87,40 @@ function parseAttrs(raw, map) {
 	const props = {};
 	if (!raw || !raw.trim()) return props;
 	const re =
-		/([^\s=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+		/([.?@]?[^\s=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
 	let m;
 	while ((m = re.exec(raw))) {
 		let name = m[1];
 		if (!name || name === '/') continue;
 		let value =
-			m[2] !== undefined ? m[2] : m[3] !== undefined ? m[3] : m[4] !== undefined ? m[4] : true;
+			m[2] !== undefined
+				? m[2]
+				: m[3] !== undefined
+					? m[3]
+					: m[4] !== undefined
+						? m[4]
+						: true;
 
 		if (typeof value === 'string' && value.includes('\0')) {
 			value = expand(value, map);
 		}
-		if (name.includes('\0')) {
-			// dynamic prop name - skip
+		if (name.includes('\0')) continue;
+
+		const prefix = name[0];
+		if (prefix === '.' || prefix === '?' || prefix === '@') {
+			name = name.slice(1);
+			if (!name) continue;
+			if (prefix === '@') {
+				props['on' + name[0].toUpperCase() + name.slice(1)] = value;
+			} else if (prefix === '?') {
+				if (value) props[name] = true;
+			} else {
+				// .prop - DOM property; Strike setProperty already prefers props on the element
+				props[name] = value;
+			}
 			continue;
 		}
-		if (name.startsWith('on') && name.length > 2) {
-			// keep as-is for Strike events
-		}
+
 		if (name === 'class') props.class = value;
 		else props[name] = value;
 	}
@@ -120,9 +138,7 @@ function expand(str, map) {
 
 function splitText(text, map) {
 	if (!text.includes('\0')) {
-		const t = text;
-		// preserve whitespace that isn't only whitespace between tags? keep as-is
-		return t.trim() === '' && (t.includes('\n') || t === ' ') ? [] : [decode(t, map)];
+		return text.trim() === '' ? [] : [text];
 	}
 	const parts = [];
 	const re = /\0(\d+)\0/g;
@@ -135,14 +151,9 @@ function splitText(text, map) {
 	}
 	if (last < text.length) parts.push(text.slice(last));
 	return parts.filter(p => {
-		if (typeof p === 'string') return p.trim() !== '' || p.length === 0 ? p.trim() !== '' : false;
+		if (typeof p === 'string') return p.trim() !== '';
 		return p != null && p !== false;
 	});
-}
-
-function decode(t, map) {
-	if (!t.includes('\0')) return t;
-	return expand(t, map);
 }
 
 const VOID = {

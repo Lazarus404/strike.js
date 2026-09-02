@@ -1,13 +1,14 @@
-import { h } from './src/graph.js';
+import { h, Fragment } from './index.js';
 
-/** Automatic JSX runtime entry (jsx / jsxs). Bundlers map jsxImportSource here. */
+export { Fragment };
+
+/** Automatic JSX: key is the third argument, never a child. */
 export function jsx(type, props, key) {
-	const p = props == null ? {} : { ...props };
 	if (key !== undefined) {
-		return h(type, { ...p, key });
+		props = props == null ? { key } : { ...props, key };
 	}
-	return h(type, p);
+	return h(type, props);
 }
 
 export const jsxs = jsx;
-export { Fragment } from './src/graph.js';
+export const jsxDEV = jsx;

@@ -1,27 +1,17 @@
-import { strict as assert } from 'node:assert';
-import test from './harness.js';
-import { parseHTML } from 'linkedom';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import * as esbuild from 'esbuild';
 import { readFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { installDom } from './dom.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-test('esbuild jsxFactory h compiles and mounts', async () => {
-	const { window } = parseHTML(
-		'<html><head></head><body><div id="app"></div></body></html>'
-	);
-	Object.assign(globalThis, {
-		document: window.document,
-		window,
-		HTMLElement: window.HTMLElement,
-		customElements: window.customElements,
-		requestAnimationFrame: cb => setTimeout(cb, 0)
-	});
+test('automatic JSX runtime compiles and mounts', async () => {
+	const { window } = installDom();
 
 	const source = `
-		import { h, Fragment } from './index.js';
 		import { useState } from './hooks.js';
 		import { mount } from './mount.js';
 
@@ -50,13 +40,17 @@ test('esbuild jsxFactory h compiles and mounts', async () => {
 		bundle: true,
 		format: 'esm',
 		outfile,
-		jsxFactory: 'h',
-		jsxFragment: 'Fragment',
+		jsx: 'automatic',
+		jsxImportSource: 'strike',
+		alias: {
+			'strike/jsx-runtime': join(root, 'jsx-runtime.js'),
+			'strike/jsx-dev-runtime': join(root, 'jsx-runtime.js')
+		},
 		loader: { '.js': 'js', '.jsx': 'jsx' }
 	});
 
 	const code = readFileSync(outfile, 'utf8');
-	assert.match(code, /\bh\(/);
+	assert.match(code, /jsx-runtime|function jsx\b|\bjxs?\(/);
 	assert.equal(code.includes('<button'), false);
 
 	await import(pathToFileURL(outfile).href + '?t=' + Date.now());
@@ -70,11 +64,17 @@ test('esbuild jsxFactory h compiles and mounts', async () => {
 	assert.equal(btn.textContent, '1');
 });
 
-test('example sources use JSX tags', () => {
-	for (const name of ['todo', 'login', 'site']) {
-		const src = readFileSync(join(root, `examples/${name}/app.jsx`), 'utf8');
-		assert.match(src, /<[A-Za-z]/, `${name} has JSX tags`);
-		assert.equal(/\bh\s*\(/.test(src), false, `${name} source is JSX not h()`);
-	}
+test('jsx() keeps key out of children', async () => {
+	const { jsx } = await import('../jsx-runtime.js');
+	const vnode = jsx('li', { children: 'Milk' }, 'k1');
+	assert.equal(vnode.key, 'k1');
+	assert.equal(vnode.props.children, 'Milk');
 });
 
+test('example sources use JSX without importing h', () => {
+	for (const name of ['todo', 'login', 'site']) {
+		const src = readFileSync(join(root, `examples/${name}/app.jsx`), 'utf8');
+		assert.match(src, /<[A-Za-z]/);
+		assert.equal(/\bimport\s*\{[^}]*\bh\b/.test(src), false);
+	}
+});

@@ -1,5 +1,5 @@
-import { strict as assert } from 'node:assert';
-import test from './harness.js';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { parseHTML } from 'linkedom';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
