@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Northline</title>
-    <link rel="stylesheet" href="../../ui/tokens.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/tokens.css"
+    />
     <style>
       body {
         margin: 0;
@@ -61,18 +64,10 @@
         border-top: 1px solid var(--strike-line);
       }
     </style>
-      <script type="importmap">
-    {
-      "imports": {
-        "strike/jsx-runtime": "../../jsx-runtime.js",
-        "strike/jsx-dev-runtime": "../../jsx-runtime.js"
-      }
-    }
-    </script>
   </head>
   <body>
     <div id="app"><i>Loading</i></div>
-    <!-- app.js from: npm run build:jsx -->
+    <!-- app.js from: npm run build:jsx (Strike via jsDelivr CDN) -->
     <script type="module" src="./app.js"></script>
   </body>
 </html>

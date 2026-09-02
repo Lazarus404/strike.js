@@ -68,9 +68,9 @@ test('btn module source does not import select', () => {
 test('login demo imports field and btn only from ui', () => {
 	const dir = dirname(fileURLToPath(import.meta.url));
 	const src = readFileSync(join(dir, '../examples/login/app.jsx'), 'utf8');
-	assert.ok(src.includes('ui/btn.js'));
-	assert.ok(src.includes('ui/field.js'));
-	assert.ok(src.includes('ui/text.js'));
+	assert.ok(src.includes('strike-fw/ui/btn.js'));
+	assert.ok(src.includes('strike-fw/ui/field.js'));
+	assert.ok(src.includes('strike-fw/ui/text.js'));
 	assert.equal(src.includes('ui/select.js'), false);
 	assert.equal(src.includes('ui/image.js'), false);
 });

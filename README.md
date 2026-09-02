@@ -121,7 +121,7 @@ const stop = installDebug(); // logs diffs / hydrate mismatches
 
 [Harbor Goods](https://github.com/Lazarus404/strike.js-demo) — ecommerce SPA that consumes Strike dist only.
 
-In-repo examples (relative source imports):
+In-package examples load Strike from the **jsDelivr CDN** (`strike-fw@0.2.0`), not local source:
 
 ```bash
 npm run build:jsx
@@ -131,6 +131,8 @@ python3 -m http.server 8080
 - [http://localhost:8080/examples/todo/](http://localhost:8080/examples/todo/)
 - [http://localhost:8080/examples/login/](http://localhost:8080/examples/login/)
 - [http://localhost:8080/examples/site/](http://localhost:8080/examples/site/)
+
+Bump the CDN pin in `examples/cdn.mjs` (and example HTML token links) when pointing examples at a newer release.
 
 ## Publishing (maintainers)
 

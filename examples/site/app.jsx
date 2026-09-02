@@ -1,9 +1,9 @@
-import { mount } from '../../index.js';
-import { useState, useLayoutEffect } from '../../hooks.js';
-import { Btn } from '../../ui/btn.js';
-import { Field } from '../../ui/field.js';
-import { Stack } from '../../ui/stack.js';
-import { Text } from '../../ui/text.js';
+import { mount } from 'strike-fw';
+import { useState, useLayoutEffect } from 'strike-fw/hooks';
+import { Btn } from 'strike-fw/ui/btn.js';
+import { Field } from 'strike-fw/ui/field.js';
+import { Stack } from 'strike-fw/ui/stack.js';
+import { Text } from 'strike-fw/ui/text.js';
 
 const PAGES = [
 	{ path: '/', label: 'Home' },

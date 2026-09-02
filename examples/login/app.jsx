@@ -1,8 +1,8 @@
-import { mount } from '../../index.js';
-import { useState } from '../../hooks.js';
-import { Btn } from '../../ui/btn.js';
-import { Field } from '../../ui/field.js';
-import { Text } from '../../ui/text.js';
+import { mount } from 'strike-fw';
+import { useState } from 'strike-fw/hooks';
+import { Btn } from 'strike-fw/ui/btn.js';
+import { Field } from 'strike-fw/ui/field.js';
+import { Text } from 'strike-fw/ui/text.js';
 
 export function Login({ onSubmit, pending, error }) {
 	const [email, setEmail] = useState('');
