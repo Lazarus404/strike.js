@@ -77,7 +77,7 @@ Optional all-in CSS: `ui.css`. Optional all-controls JS bundle:
 node build.mjs   # dist/strike.js, strike.core+hooks.js, strike-ui.js, html.js, css
 ```
 
-Per-control modules self-inject CSS via `css\`\``. The catalog is never folded into `dist/strike.js`.
+Per-control modules self-inject CSS via `css\`. The catalog is never folded into `dist/strike.js`.
 
 Controls: `stack`, `text`, `btn`, `field`, `check`, `select`, `image`, `form`, `switch`, `dialog`, `radio-group`, `number-field`, `btn-group`, `toggle-group`, `autocomplete`.
 
