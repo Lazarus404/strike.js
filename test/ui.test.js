@@ -59,6 +59,39 @@ test('each control renders with strike- class prefix', async () => {
 	assert.equal(host.querySelector('img').getAttribute('alt'), 'x');
 });
 
+test('Check indeterminate sets DOM property', async () => {
+	installDom();
+	const { h, render } = await import('../index.js');
+	const { useState } = await import('../hooks.js');
+	const { Check } = await import('../ui/check.js');
+	const host = document.createElement('div');
+	render(h(Check, { label: 'Pick', indeterminate: true }), host);
+	await Promise.resolve();
+	const input = host.querySelector('input[type=checkbox]');
+	assert.equal(input.indeterminate, true);
+
+	function App() {
+		const [ind, setInd] = useState(false);
+		return h(
+			'div',
+			null,
+			h(
+				'button',
+				{ type: 'button', onClick: () => setInd(true) },
+				'go'
+			),
+			h(Check, { label: 'Pick', indeterminate: ind })
+		);
+	}
+	render(h(App), host);
+	assert.equal(host.querySelector('input[type=checkbox]').indeterminate, false);
+	host.querySelector('button').dispatchEvent(
+		new window.Event('click', { bubbles: true })
+	);
+	await Promise.resolve();
+	assert.equal(host.querySelector('input[type=checkbox]').indeterminate, true);
+});
+
 test('btn module source does not import select', () => {
 	const dir = dirname(fileURLToPath(import.meta.url));
 	const src = readFileSync(join(dir, '../ui/btn.js'), 'utf8');

@@ -47,6 +47,7 @@ export declare function Check(props: {
 	label?: ComponentChildren;
 	class?: string;
 	state?: ControlState;
+	indeterminate?: boolean;
 	children?: ComponentChildren;
 	[key: string]: unknown;
 }): unknown;

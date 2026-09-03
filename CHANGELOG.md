@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.1] - 2026-09-02
+
+### Added
+
+- `Check` optional `indeterminate` prop (sets native `input.indeterminate`)
+- Optional `strike-fw/transition`: CSS presets, phase helpers, FLIP layout moves, `useTransition`
+
+### Fixed
+
+- Layout effects (`useLayoutEffect`) run on component updates, not only on mount (needed for `Check.indeterminate` after selection changes)
+
 ## [0.2.0] - 2026-09-02
 
 ### Added

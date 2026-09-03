@@ -1,4 +1,5 @@
 import { h } from '../index.js';
+import { useLayoutEffect, useRef } from '../hooks.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
 
@@ -22,13 +23,23 @@ export function Check({
 	label,
 	class: className,
 	state = 'rest',
+	indeterminate = false,
 	children,
 	...rest
 }) {
+	const inputRef = useRef(null);
+	useLayoutEffect(() => {
+		if (inputRef.current) inputRef.current.indeterminate = !!indeterminate;
+	}, [indeterminate]);
 	return h(
 		'label',
 		{ class: cls('strike-check', className), 'data-state': state },
-		h('input', { type: 'checkbox', class: 'strike-check__input', ...rest }),
+		h('input', {
+			...rest,
+			ref: inputRef,
+			type: 'checkbox',
+			class: 'strike-check__input'
+		}),
 		(label || children) &&
 			h('span', { class: 'strike-check__label' }, label || children)
 	);

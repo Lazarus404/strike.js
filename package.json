@@ -1,6 +1,6 @@
 {
   "name": "strike-fw",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Small browser VDOM runtime with hooks, JSX, html templates, and an optional UI catalog",
   "type": "module",
   "license": "MIT",
@@ -31,6 +31,7 @@
     "./hooks.js",
     "./src/patch.js",
     "./css.js",
+    "./transition.js",
     "./ui/**/*.js",
     "*.css",
     "./ui.css",
@@ -69,6 +70,11 @@
       "import": "./css.js",
       "default": "./css.js"
     },
+    "./transition": {
+      "types": "./types/transition.d.ts",
+      "import": "./transition.js",
+      "default": "./transition.js"
+    },
     "./ce": {
       "types": "./types/define.d.ts",
       "import": "./define.js",
@@ -104,6 +110,7 @@
     "hooks.js",
     "html.js",
     "css.js",
+    "transition.js",
     "debug.js",
     "define.js",
     "mount.js",

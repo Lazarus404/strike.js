@@ -106,6 +106,8 @@ Or the barrel: `import { Btn, Field } from 'strike-fw/ui'`.
 
 Optional all-in CSS: `strike-fw/ui.css`. Optional CDN UI bundle: `dist/strike-ui.js` (peer to `dist/strike.core+hooks.js`).
 
+Optional transitions: `import { resolveTransition, transitionClass, flipLayout, useTransition } from 'strike-fw/transition'` — CSS presets + FLIP helpers (not in the main runtime).
+
 Per-control modules self-inject CSS via the `css` tagged template. The catalog is never folded into `dist/strike.js`.
 
 Controls: `stack`, `text`, `btn`, `field`, `check`, `select`, `image`, `form`, `switch`, `dialog`, `radio-group`, `number-field`, `btn-group`, `toggle-group`, `autocomplete`.

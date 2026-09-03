@@ -186,8 +186,8 @@ function patchComponent(
 
 	neu._dom = portal ? null : firstDom(neu._children);
 
+	commit.push(c);
 	if (!isSame) {
-		commit.push(c);
 		if (c.componentDidMount) {
 			c._renderCallbacks.push(() => c.componentDidMount());
 		}
