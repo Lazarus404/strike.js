@@ -1,4 +1,4 @@
-import { h } from './src/graph.js';
+import { h, Fragment } from './src/graph.js';
 
 /**
  * Tagged template -> VNodes (htm-class, not lit-html).
@@ -7,11 +7,7 @@ import { h } from './src/graph.js';
 export function html(strings, ...values) {
 	const src = build(strings, values);
 	const parsed = parse(src.s, src.map);
-	return parsed.length === 1 ? parsed[0] : h(Fragmentish, null, parsed);
-}
-
-function Fragmentish(props) {
-	return props.children;
+	return parsed.length === 1 ? parsed[0] : h(Fragment, null, parsed);
 }
 
 function build(strings, values) {
@@ -92,14 +88,7 @@ function parseAttrs(raw, map) {
 	while ((m = re.exec(raw))) {
 		let name = m[1];
 		if (!name || name === '/') continue;
-		let value =
-			m[2] !== undefined
-				? m[2]
-				: m[3] !== undefined
-					? m[3]
-					: m[4] !== undefined
-						? m[4]
-						: true;
+		let value = m[2] !== undefined ? m[2] : m[3] !== undefined ? m[3] : m[4] !== undefined ? m[4] : true;
 
 		if (typeof value === 'string' && value.includes('\0')) {
 			value = expand(value, map);

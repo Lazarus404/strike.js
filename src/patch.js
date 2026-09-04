@@ -1,7 +1,7 @@
 import options from './options.js';
 import { Fragment, createElement } from './graph.js';
 import { createHost, bindPatch, enqueue } from './host.js';
-import { INSERT, MATCHED, MODE_HYDRATE, DIRTY, FORCE } from './flags.js';
+import { INSERT, MODE_HYDRATE, DIRTY, FORCE } from './flags.js';
 
 const NS_SVG = 'http://www.w3.org/2000/svg';
 const NS_MATH = 'http://www.w3.org/1998/Math/MathML';
@@ -406,7 +406,7 @@ function diffChildren(
 		if (child._flags & INSERT) {
 			place(parentDom, child._dom, nextStableDom(kids, i + 1));
 		}
-		child._flags &= ~(INSERT | MATCHED);
+		child._flags &= ~INSERT;
 	}
 }
 
@@ -738,6 +738,6 @@ export function createPortal(child, container) {
 	return createElement(Fragment, { _parentDom: container }, child);
 }
 
-export { MODE_HYDRATE, INSERT, MATCHED };
+export { MODE_HYDRATE, INSERT };
 
 bindPatch({ patch, unmountTree, applyRef });

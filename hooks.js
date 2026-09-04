@@ -10,17 +10,17 @@ options._render = vnode => {
 	current = vnode._component;
 	hookIndex = 0;
 	if (current && !current.__hooks) {
-		current.__hooks = { _list: [], _pending: [] };
+		current.__hooks = { _list: [] };
 	}
 };
 
 const prevCommit = options._commit;
 options._commit = (root, commit) => {
 	if (prevCommit) prevCommit(root, commit);
-	for (let i = 0; i < commit.length; i++) flushLayout(commit[i]);
+	for (let i = 0; i < commit.length; i++) flushHooks(commit[i], '_pendingLayout');
 	const hosts = collectHosts(root);
 	(options.requestAnimationFrame || raf)(() => {
-		for (const c of hosts) flushPassive(c);
+		for (const c of hosts) flushHooks(c, '_pendingEffect');
 	});
 };
 
@@ -48,31 +48,17 @@ function collectHosts(vnode, out = []) {
 	return out;
 }
 
-function flushLayout(c) {
+function flushHooks(c, key) {
 	const hooks = c.__hooks;
 	if (!hooks) return;
 	for (let i = 0; i < hooks._list.length; i++) {
 		const h = hooks._list[i];
-		if (h._pendingLayout) {
-			if (h._cleanup) h._cleanup();
-			const cleanup = h._pendingLayout();
-			h._cleanup = typeof cleanup === 'function' ? cleanup : null;
-			h._pendingLayout = null;
-		}
-	}
-}
-
-function flushPassive(c) {
-	const hooks = c.__hooks;
-	if (!hooks) return;
-	for (let i = 0; i < hooks._list.length; i++) {
-		const h = hooks._list[i];
-		if (h._pendingEffect) {
-			if (h._cleanup) h._cleanup();
-			const cleanup = h._pendingEffect();
-			h._cleanup = typeof cleanup === 'function' ? cleanup : null;
-			h._pendingEffect = null;
-		}
+		const pending = h[key];
+		if (!pending) continue;
+		if (h._cleanup) h._cleanup();
+		const cleanup = pending();
+		h._cleanup = typeof cleanup === 'function' ? cleanup : null;
+		h[key] = null;
 	}
 }
 

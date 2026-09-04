@@ -2,6 +2,8 @@ import { h } from '../index.js';
 import { useLayoutEffect, useRef } from '../hooks.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
+import { slotLabel } from './helpers.js';
+import './shared-styles.js';
 
 css`
 .strike-check {
@@ -16,7 +18,6 @@ css`
   height: 1rem;
   accent-color: var(--strike-accent, #0b6e4f);
 }
-.strike-check[data-state="busy"] { opacity: 0.6; pointer-events: none; }
 `;
 
 export function Check({
@@ -40,7 +41,6 @@ export function Check({
 			type: 'checkbox',
 			class: 'strike-check__input'
 		}),
-		(label || children) &&
-			h('span', { class: 'strike-check__label' }, label || children)
+		slotLabel(label, children, 'strike-check__label')
 	);
 }

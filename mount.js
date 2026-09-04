@@ -9,6 +9,16 @@ export function register(name, component) {
 	registry.set(name, component);
 }
 
+function eachTarget(target, fn) {
+	if (typeof target === 'string') {
+		const nodes = document.querySelectorAll(target);
+		const out = [];
+		for (let i = 0; i < nodes.length; i++) out.push(fn(nodes[i]));
+		return out;
+	}
+	return fn(target);
+}
+
 /**
  * Mount a component into a selector or element.
  * String targets mount every match (querySelectorAll).
@@ -19,13 +29,8 @@ export function mount(target, component, props, opts) {
 	if (typeof target === 'string') {
 		const nodes = document.querySelectorAll(target);
 		if (!nodes.length) throw new Error('Strike mount: host not found');
-		const out = [];
-		for (let i = 0; i < nodes.length; i++) {
-			out.push(mountOne(nodes[i], component, props, opts));
-		}
-		return out;
 	}
-	return mountOne(target, component, props, opts);
+	return eachTarget(target, host => mountOne(host, component, props, opts));
 }
 
 function mountOne(host, component, props, opts) {
@@ -59,8 +64,7 @@ function mountOne(host, component, props, opts) {
 
 export function unmount(target, keepHost) {
 	if (typeof target === 'string') {
-		const nodes = document.querySelectorAll(target);
-		for (let i = 0; i < nodes.length; i++) unmountHost(nodes[i], keepHost);
+		eachTarget(target, host => unmountHost(host, keepHost));
 		return;
 	}
 	if (!target) return;

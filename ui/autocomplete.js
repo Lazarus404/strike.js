@@ -2,6 +2,8 @@ import { h } from '../index.js';
 import { useState } from '../hooks.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
+import { optLabel } from './helpers.js';
+import './shared-styles.js';
 
 css`
 .strike-autocomplete {
@@ -11,22 +13,9 @@ css`
   font: inherit;
   position: relative;
 }
-.strike-autocomplete__label {
-  font-size: 0.85rem;
-  color: var(--strike-muted, #5c5c5c);
-}
 .strike-autocomplete__input {
-  font: inherit;
-  padding: 0.45rem 0.65rem;
-  border: 1px solid var(--strike-line, #ccc);
-  border-radius: var(--strike-radius, 6px);
-  background: #fff;
   width: 100%;
   box-sizing: border-box;
-}
-.strike-autocomplete__input:focus-visible {
-  outline: 2px solid var(--strike-accent, #0b6e4f);
-  outline-offset: 1px;
 }
 .strike-autocomplete__list {
   position: absolute;
@@ -52,10 +41,6 @@ css`
 .strike-autocomplete__option:hover {
   background: color-mix(in srgb, var(--strike-accent, #0b6e4f) 12%, #fff);
 }
-.strike-autocomplete[data-state="invalid"] .strike-autocomplete__input {
-  border-color: var(--strike-danger, #9b2226);
-}
-.strike-autocomplete[data-state="busy"] { opacity: 0.6; pointer-events: none; }
 `;
 
 /**
@@ -82,6 +67,12 @@ export function Autocomplete({
 		if (onSelect) onSelect(opt, e);
 	}
 
+	function move(delta, e) {
+		e.preventDefault();
+		setOpen(true);
+		setActive(i => (i + delta + options.length) % options.length);
+	}
+
 	function onKeyDown(e) {
 		if (e.key === 'Escape') {
 			e.preventDefault();
@@ -89,18 +80,8 @@ export function Autocomplete({
 			return;
 		}
 		if (!options.length) return;
-		if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			setOpen(true);
-			setActive(i => (i + 1) % options.length);
-			return;
-		}
-		if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			setOpen(true);
-			setActive(i => (i - 1 + options.length) % options.length);
-			return;
-		}
+		if (e.key === 'ArrowDown') return move(1, e);
+		if (e.key === 'ArrowUp') return move(-1, e);
 		if (e.key === 'Enter' && open) {
 			e.preventDefault();
 			const opt = options[active];
@@ -133,7 +114,6 @@ export function Autocomplete({
 				if (rest.onFocus) rest.onFocus(e);
 			},
 			onBlur: e => {
-				// Delay so option mousedown can fire first.
 				setTimeout(() => setOpen(false), 0);
 				if (rest.onBlur) rest.onBlur(e);
 			},
@@ -160,7 +140,7 @@ export function Autocomplete({
 									pick(o, e);
 								}
 							},
-							o.label != null ? o.label : o.value
+							optLabel(o)
 						)
 					)
 				)

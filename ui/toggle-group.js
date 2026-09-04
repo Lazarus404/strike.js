@@ -2,6 +2,8 @@ import { h } from '../index.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
 import { Btn } from './btn.js';
+import { optLabel } from './helpers.js';
+import './shared-styles.js';
 
 css`
 .strike-toggle-group {
@@ -11,25 +13,7 @@ css`
   gap: 0.35rem;
   font: inherit;
 }
-.strike-toggle-group--joined {
-  gap: 0;
-}
-.strike-toggle-group--joined > .strike-btn {
-  border-radius: 0;
-  margin-left: -1px;
-}
-.strike-toggle-group--joined > .strike-btn:first-child {
-  margin-left: 0;
-  border-radius: var(--strike-radius, 6px) 0 0 var(--strike-radius, 6px);
-}
-.strike-toggle-group--joined > .strike-btn:last-child {
-  border-radius: 0 var(--strike-radius, 6px) var(--strike-radius, 6px) 0;
-}
-.strike-toggle-group--joined > .strike-btn:only-child {
-  border-radius: var(--strike-radius, 6px);
-  margin-left: 0;
-}
-.strike-toggle-group[data-state="busy"] { opacity: 0.6; pointer-events: none; }
+.strike-toggle-group--joined { gap: 0; }
 `;
 
 function isSelected(value, v, exclusive) {
@@ -85,7 +69,7 @@ export function ToggleGroup({
 						onChange(cur, e);
 					}
 				},
-				o.label != null ? o.label : v
+				optLabel(o)
 			);
 		})
 	);

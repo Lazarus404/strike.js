@@ -1,6 +1,7 @@
 import { h } from '../index.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
+import './shared-styles.js';
 
 css`
 .strike-btn {
@@ -22,7 +23,6 @@ css`
 }
 .strike-btn--ghost { background: transparent; }
 .strike-btn--default { background: #fff; }
-.strike-btn[data-state="busy"] { opacity: 0.6; pointer-events: none; }
 `;
 
 export function Btn({

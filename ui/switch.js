@@ -1,6 +1,8 @@
 import { h } from '../index.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
+import { slotLabel } from './helpers.js';
+import './shared-styles.js';
 
 css`
 .strike-switch {
@@ -48,7 +50,6 @@ css`
 .strike-switch__input:checked + .strike-switch__track::after {
   transform: translateX(1rem);
 }
-.strike-switch[data-state="busy"] { opacity: 0.6; pointer-events: none; }
 `;
 
 /** Accessible switch built on a checkbox. */
@@ -69,7 +70,6 @@ export function Switch({
 			...rest
 		}),
 		h('span', { class: 'strike-switch__track', 'aria-hidden': 'true' }),
-		(label || children) &&
-			h('span', { class: 'strike-switch__label' }, label || children)
+		slotLabel(label, children, 'strike-switch__label')
 	);
 }

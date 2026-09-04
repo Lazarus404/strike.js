@@ -1,6 +1,8 @@
 import { h } from '../index.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
+import { optLabel } from './helpers.js';
+import './shared-styles.js';
 
 css`
 .strike-radio-group {
@@ -8,10 +10,6 @@ css`
   flex-direction: column;
   gap: 0.5rem;
   font: inherit;
-}
-.strike-radio-group__label {
-  font-size: 0.85rem;
-  color: var(--strike-muted, #5c5c5c);
 }
 .strike-radio-group__options {
   display: flex;
@@ -35,7 +33,6 @@ css`
   height: 1rem;
   accent-color: var(--strike-accent, #0b6e4f);
 }
-.strike-radio-group[data-state="busy"] { opacity: 0.6; pointer-events: none; }
 `;
 
 /** Native radio group. options: [{ value, label }]. */
@@ -90,11 +87,7 @@ export function RadioGroup({
 							if (onChange) onChange(e);
 						}
 					}),
-					h(
-						'span',
-						{ class: 'strike-radio__label' },
-						o.label != null ? o.label : v
-					)
+					h('span', { class: 'strike-radio__label' }, optLabel(o))
 				);
 			})
 		)

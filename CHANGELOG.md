@@ -8,6 +8,7 @@ All notable changes to this project are documented in this file.
 
 - `Check` optional `indeterminate` prop (sets native `input.indeterminate`)
 - Optional `strike-fw/transition`: CSS presets, phase helpers, FLIP layout moves, `useTransition`
+- Per-feature tutorials under `docs/`
 
 ### Fixed
 

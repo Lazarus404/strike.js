@@ -8,36 +8,25 @@ css`
     transform var(--strike-tx-ms, 200ms) var(--strike-tx-ease, ease);
 }
 .strike-tx--fade.strike-tx--enter,
-.strike-tx--fade.strike-tx--exit {
-  opacity: 0;
-}
+.strike-tx--fade.strike-tx--exit { opacity: 0; }
 .strike-tx--slide-up.strike-tx--enter,
-.strike-tx--slide-up.strike-tx--exit {
-  opacity: 0;
-  transform: translateY(var(--strike-tx-distance, 0.5rem));
-}
+.strike-tx--slide-up.strike-tx--exit,
 .strike-tx--slide-down.strike-tx--enter,
-.strike-tx--slide-down.strike-tx--exit {
-  opacity: 0;
-  transform: translateY(calc(-1 * var(--strike-tx-distance, 0.5rem)));
-}
+.strike-tx--slide-down.strike-tx--exit,
 .strike-tx--slide-start.strike-tx--enter,
-.strike-tx--slide-start.strike-tx--exit {
-  opacity: 0;
-  transform: translateX(var(--strike-tx-distance, 0.5rem));
-}
+.strike-tx--slide-start.strike-tx--exit,
 .strike-tx--slide-end.strike-tx--enter,
 .strike-tx--slide-end.strike-tx--exit {
   opacity: 0;
-  transform: translateX(calc(-1 * var(--strike-tx-distance, 0.5rem)));
+  transform: var(--strike-tx-slide, none);
 }
-.strike-tx--none {
-  transition: none;
-}
+.strike-tx--slide-up { --strike-tx-slide: translateY(var(--strike-tx-distance, 0.5rem)); }
+.strike-tx--slide-down { --strike-tx-slide: translateY(calc(-1 * var(--strike-tx-distance, 0.5rem))); }
+.strike-tx--slide-start { --strike-tx-slide: translateX(var(--strike-tx-distance, 0.5rem)); }
+.strike-tx--slide-end { --strike-tx-slide: translateX(calc(-1 * var(--strike-tx-distance, 0.5rem))); }
+.strike-tx--none { transition: none; }
 @media (prefers-reduced-motion: reduce) {
-  .strike-tx {
-    transition-duration: 0.01ms;
-  }
+  .strike-tx { transition-duration: 0.01ms; }
 }
 `;
 
@@ -49,6 +38,8 @@ const PRESETS = {
 	'slide-end': 1,
 	none: 1
 };
+
+const PHASE_SUFFIX = { enter: ' strike-tx--enter', exit: ' strike-tx--exit' };
 
 function raf(fn) {
 	if (typeof requestAnimationFrame === 'function') return requestAnimationFrame(fn);
@@ -62,6 +53,11 @@ function caf(id) {
 
 function isOff(v) {
 	return v === false || v === 'none';
+}
+
+function normEnterExit(v, fallback) {
+	if (isOff(v)) return 'none';
+	return PRESETS[v] ? v : fallback;
 }
 
 /**
@@ -103,14 +99,10 @@ export function resolveTransition(input, defaults = {}) {
 	}
 
 	const obj = input && typeof input === 'object' ? input : {};
-	let enter = obj.enter != null ? obj.enter : baseEnter;
-	let exit = obj.exit != null ? obj.exit : baseExit;
+	const enter = normEnterExit(obj.enter != null ? obj.enter : baseEnter, 'fade');
+	const exit = normEnterExit(obj.exit != null ? obj.exit : baseExit, 'fade');
 	let move = obj.move != null ? obj.move : baseMove;
-	if (isOff(enter)) enter = 'none';
-	if (isOff(exit)) exit = 'none';
 	if (isOff(move)) move = 'none';
-	if (enter !== 'none' && !PRESETS[enter]) enter = 'fade';
-	if (exit !== 'none' && !PRESETS[exit]) exit = 'fade';
 	const ms = obj.ms != null ? obj.ms : baseMs;
 	const disabled = enter === 'none' && exit === 'none' && move === 'none';
 	return {
@@ -126,12 +118,9 @@ export function resolveTransition(input, defaults = {}) {
 
 /** Class list for a preset + phase (`enter` | `in` | `exit`). */
 export function transitionClass(name, phase) {
-	if (!name || name === 'none' || isOff(name)) return 'strike-tx strike-tx--none';
+	if (!name || isOff(name)) return 'strike-tx strike-tx--none';
 	const preset = PRESETS[name] ? name : 'fade';
-	let out = 'strike-tx strike-tx--' + preset;
-	if (phase === 'enter') out += ' strike-tx--enter';
-	else if (phase === 'exit') out += ' strike-tx--exit';
-	return out;
+	return 'strike-tx strike-tx--' + preset + (PHASE_SUFFIX[phase] || '');
 }
 
 /** Inline CSS vars for duration / easing / distance. */
@@ -221,8 +210,7 @@ export function useTransition(opts = {}) {
 		exiting.current = true;
 		setPhase('exit');
 		const token = gen.current;
-		const wait = isOff(name) || name === 'none' ? 0 : ms;
-		waitMs(wait).then(() => {
+		waitMs(isOff(name) ? 0 : ms).then(() => {
 			if (token !== gen.current) return;
 			const cb = onExitedRef.current;
 			if (cb) cb();
@@ -245,15 +233,11 @@ export function useTransition(opts = {}) {
 		finishExit();
 	}, [open]);
 
-	function requestExit() {
-		finishExit();
-	}
-
-	const resolved = isOff(name) || name === 'none' ? 'none' : name || 'fade';
+	const resolved = isOff(name) ? 'none' : name || 'fade';
 	return {
 		phase,
 		className: transitionClass(resolved, phase),
 		style: transitionVars({ ms, ease: opts.ease, distance: opts.distance }),
-		requestExit
+		requestExit: finishExit
 	};
 }

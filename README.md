@@ -36,9 +36,9 @@ Prebuilt files under `dist/` (after install or `npm run build`):
 
 | File | Role | ~gzip |
 |------|------|-------|
-| `dist/strike.js` | core | ~5.0kb |
+| `dist/strike.js` | core | ~5.1kb |
 | `dist/strike.core+hooks.js` | core + hooks | ~5.8kb |
-| `dist/strike-ui.js` | UI catalog (imports core) | ~4.3kb |
+| `dist/strike-ui.js` | UI catalog (imports core) | ~4.4kb |
 | `dist/html.js` | `html` templates | ~1.1kb |
 
 ```bash
@@ -135,6 +135,21 @@ python3 -m http.server 8080
 - [http://localhost:8080/examples/site/](http://localhost:8080/examples/site/)
 
 Bump the CDN pin in `examples/cdn.mjs` (and example HTML token links) when pointing examples at a newer release.
+
+## Tutorials
+
+- `docs/index.md`
+- `docs/setup.md`
+- `docs/render.md`
+- `docs/mount.md`
+- `docs/hooks.md`
+- `docs/jsx.md`
+- `docs/html.md`
+- `docs/css.md`
+- `docs/ui.md`
+- `docs/transition.md`
+- `docs/ce.md`
+- `docs/debug.md`
 
 ## Publishing (maintainers)
 

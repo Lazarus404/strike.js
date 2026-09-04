@@ -1,6 +1,7 @@
 import { h } from '../index.js';
 import { css } from '../css.js';
 import { cls } from './cls.js';
+import './shared-styles.js';
 
 css`
 .strike-form {
@@ -9,7 +10,6 @@ css`
   gap: var(--strike-gap, 0.75rem);
   font: inherit;
 }
-.strike-form[data-state="busy"] { opacity: 0.7; pointer-events: none; }
 `;
 
 /** Form shell: preventDefault + optional busy state. */
