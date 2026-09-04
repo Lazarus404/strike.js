@@ -41,11 +41,11 @@ Core + hooks:
 ```html
 <script type="module">
   import { h, render, useState } from
-    'https://cdn.jsdelivr.net/npm/strike-fw@0.2.1/dist/strike.core+hooks.js';
+    'https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/dist/strike.core+hooks.js';
 </script>
 ```
 
-Also on unpkg: `https://unpkg.com/strike-fw@0.2.1/dist/strike.core+hooks.js`.
+Also on unpkg: `https://unpkg.com/strike-fw@0.2.2/dist/strike.core+hooks.js`.
 
 ## Dist files
 
@@ -68,7 +68,7 @@ Tokens CSS for the catalog:
 
 ```html
 <link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/strike-fw@0.2.1/ui/tokens.css" />
+  href="https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/tokens.css" />
 ```
 
 Optional all-in CSS: `strike-fw/ui.css`. The catalog is never folded into

@@ -1,9 +1,9 @@
-import { jsx, jsxs } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/jsx-runtime.js";
-import { mount } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/index.js";
-import { useState } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/hooks.js";
-import { Btn } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/btn.js";
-import { Field } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/field.js";
-import { Text } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/text.js";
+import { jsx, jsxs } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/jsx-runtime.js";
+import { mount } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/index.js";
+import { useState } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/hooks.js";
+import { Btn } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/btn.js";
+import { Field } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/field.js";
+import { Text } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/text.js";
 function Login({ onSubmit, pending, error }) {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");

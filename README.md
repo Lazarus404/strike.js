@@ -26,11 +26,11 @@ CDN (core + hooks):
 
 ```html
 <script type="module">
-  import { h, render, useState } from 'https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/dist/strike.core+hooks.js';
+  import { h, render, useState } from 'https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/dist/strike.core+hooks.js';
 </script>
 ```
 
-Also on unpkg: `https://unpkg.com/strike-fw@0.2.0/dist/strike.core+hooks.js`.
+Also on unpkg: `https://unpkg.com/strike-fw@0.2.2/dist/strike.core+hooks.js`.
 
 Prebuilt files under `dist/` (after install or `npm run build`):
 
@@ -101,7 +101,7 @@ import { Dialog } from 'strike-fw/ui/dialog.js';
 Or the barrel: `import { Btn, Field } from 'strike-fw/ui'`.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/tokens.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/tokens.css" />
 ```
 
 Optional all-in CSS: `strike-fw/ui.css`. Optional CDN UI bundle: `dist/strike-ui.js` (peer to `dist/strike.core+hooks.js`).
@@ -123,7 +123,7 @@ const stop = installDebug(); // logs diffs / hydrate mismatches
 
 [Harbor Goods](https://github.com/Lazarus404/strike.js-demo) — ecommerce SPA that consumes Strike dist only.
 
-In-package examples load Strike from the **jsDelivr CDN** (`strike-fw@0.2.0`), not local source:
+In-package examples load Strike from the **jsDelivr CDN** (`strike-fw@0.2.2`), not local source:
 
 ```bash
 npm run build:jsx
@@ -159,7 +159,7 @@ No remote CI — run locally before a release:
 2. `npm run build && npm run size`
 3. `npm pack --dry-run` (confirm no `test/`, `examples/`, secrets)
 4. `npm publish --access public`
-5. `git tag v0.2.0 && git push --tags`
+5. `git tag v0.2.2 && git push --tags`
 
 `prepublishOnly` runs `npm test && node build.mjs` so `dist/` is always in the tarball.
 

@@ -2,13 +2,29 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.2] - 2026-09-04
+
+### Added
+
+- Per-feature tutorials under `docs/`
+- UI shared chrome (`ui/shared-styles.js`) and helpers (`optLabel`, `slotLabel`)
+
+### Changed
+
+- Densified UI catalog CSS (controls import shared styles once)
+- Compacted `transition` resolve/CSS, hooks effect flush, `mount` targets, `html` Fragment reuse
+- README / docs CDN pins and gzip size table
+
+### Removed
+
+- Unused internal `MATCHED` vnode flag (not part of the public app API)
+
 ## [0.2.1] - 2026-09-02
 
 ### Added
 
 - `Check` optional `indeterminate` prop (sets native `input.indeterminate`)
 - Optional `strike-fw/transition`: CSS presets, phase helpers, FLIP layout moves, `useTransition`
-- Per-feature tutorials under `docs/`
 
 ### Fixed
 
@@ -32,7 +48,7 @@ All notable changes to this project are documented in this file.
 
 - Swapping sibling function components now removes prior DOM (unmount under components)
 - Portals returned from components stay on the portal target (`firstDom` no longer walks portal children)
-- JSX `key` no longer leaks into children when the automatic runtime is used
+- JSX `key` no longer leaks into children when the automatic JSX runtime is used
 
 ### Changed
 

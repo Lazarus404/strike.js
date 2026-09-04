@@ -1,5 +1,5 @@
 /** Published package on jsDelivr / unpkg. Bump when releasing examples against a new version. */
-export const STRIKE_FW_VERSION = '0.2.0';
+export const STRIKE_FW_VERSION = '0.2.2';
 export const STRIKE_FW_CDN =
 	'https://cdn.jsdelivr.net/npm/strike-fw@' + STRIKE_FW_VERSION;
 

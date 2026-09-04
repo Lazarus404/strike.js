@@ -1,10 +1,10 @@
-import { jsx, jsxs } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/jsx-runtime.js";
-import { mount } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/index.js";
-import { useState, useLayoutEffect } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/hooks.js";
-import { Btn } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/btn.js";
-import { Field } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/field.js";
-import { Stack } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/stack.js";
-import { Text } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.0/ui/text.js";
+import { jsx, jsxs } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/jsx-runtime.js";
+import { mount } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/index.js";
+import { useState, useLayoutEffect } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/hooks.js";
+import { Btn } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/btn.js";
+import { Field } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/field.js";
+import { Stack } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/stack.js";
+import { Text } from "https://cdn.jsdelivr.net/npm/strike-fw@0.2.2/ui/text.js";
 const PAGES = [
   { path: "/", label: "Home" },
   { path: "/about", label: "About" },

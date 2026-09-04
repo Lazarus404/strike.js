@@ -18,7 +18,7 @@ Or the barrel: `import { Btn, Field, cls } from 'strike-fw/ui'`.
 ## Tokens
 
 ```html
-<link rel="stylesheet" href=".../strike-fw@0.2.1/ui/tokens.css" />
+<link rel="stylesheet" href=".../strike-fw@0.2.2/ui/tokens.css" />
 ```
 
 Optional all-in: `strike-fw/ui.css`. CDN UI bundle: `dist/strike-ui.js` (peer to
