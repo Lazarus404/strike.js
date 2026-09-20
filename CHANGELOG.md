@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.3] - 2026-09-04
+
+### Added
+
+- `Btn` `outline` variant
+
 ## [0.2.2] - 2026-09-04
 
 ### Added

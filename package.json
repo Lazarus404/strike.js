@@ -1,6 +1,6 @@
 {
   "name": "strike-fw",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Small browser VDOM runtime with hooks, JSX, html templates, and an optional UI catalog",
   "type": "module",
   "license": "MIT",

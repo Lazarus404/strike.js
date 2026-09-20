@@ -139,6 +139,9 @@ Bump the CDN pin in `examples/cdn.mjs` (and example HTML token links) when point
 ## Tutorials
 
 - `docs/index.md`
+- `docs/concepts.md`
+- `docs/first-app.md`
+- `docs/jsx-or-html.md`
 - `docs/setup.md`
 - `docs/render.md`
 - `docs/mount.md`

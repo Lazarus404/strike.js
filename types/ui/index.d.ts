@@ -10,7 +10,7 @@ export interface Option {
 export declare function cls(...parts: unknown[]): string;
 
 export declare function Btn(props: {
-	variant?: 'primary' | 'ghost' | 'default' | string;
+	variant?: 'primary' | 'ghost' | 'default' | 'outline' | string;
 	state?: ControlState;
 	type?: string;
 	class?: string;

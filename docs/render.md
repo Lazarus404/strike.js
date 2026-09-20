@@ -1,11 +1,24 @@
 ---
 title: Render
-nav_order: 3
+nav_order: 6
 ---
 
 # h, render, portals, context
 
-## h / createElement
+## What it is
+
+The core building blocks: create VNodes with `h`, put them on the page with
+`render` / `hydrate`, and optional portals, context, and low-level `options`
+hooks.
+
+## When to use it
+
+- Building UI with `h` (or understanding what JSX/`html` compile to)
+- Attaching a single app tree under a parent element
+- Modals that should render under `document.body` (portals)
+- Passing values down the tree without prop drilling (context)
+
+## Minimal example
 
 ```js
 import { h, render, Fragment } from 'strike-fw';
@@ -17,11 +30,19 @@ function App() {
 render(h(App), document.getElementById('root'));
 ```
 
-`h` and `createElement` are the same. Props use DOM-ish names (`class`,
-`onClick`). Children may be VNodes, strings, numbers, arrays, or falsy
-(skipped).
+## How it works
 
-## Fragment, refs, clone
+1. `h(type, props, ...children)` builds a VNode. `type` is a tag string or a
+   function component. `h` and `createElement` are the same.
+2. Props use DOM-ish names (`class`, `onClick`).
+3. Children may be VNodes, strings, numbers, arrays, or falsy values (skipped).
+4. `render(vnode, parent)` patches the children of `parent` to match `vnode`.
+
+For islands and `data-hydrate`, prefer [mount.md](mount.md).
+
+## API / options
+
+### Fragment, refs, clone
 
 ```js
 import {
@@ -43,19 +64,19 @@ isValidElement(vnode); // true for Strike VNodes
 toChildArray(children); // flat list, drops null/false
 ```
 
-## render and hydrate
+### render and hydrate
 
 ```js
 import { render, hydrate } from 'strike-fw';
 
-render(vnode, parent); // replace children under parent
+render(vnode, parent); // replace / patch children under parent
 hydrate(vnode, parent); // reuse matching markup, wire events
 ```
 
-Prefer `mount` with `data-hydrate` for islands (see `mount.md`). Call
+Prefer `mount` with `data-hydrate` for islands (see [mount.md](mount.md)). Call
 `hydrate` directly when you already own the parent node.
 
-## Portals
+### Portals
 
 ```js
 import { h, createPortal, render } from 'strike-fw';
@@ -67,7 +88,7 @@ function Modal({ children }) {
 
 A portal returned from a component stays on the portal target across updates.
 
-## Context
+### Context
 
 ```js
 import { h, createContext } from 'strike-fw';
@@ -87,12 +108,12 @@ function Child() {
 
 Also `Theme.Consumer` with a render-prop child.
 
-## Class components
+### Class components
 
 `Component` supports `setState`, lifecycle hooks, and
 `static getDerivedStateFromError` / `useErrorBoundary` for error UI.
 
-## options
+### options
 
 ```js
 import { options } from 'strike-fw';
@@ -106,3 +127,19 @@ options.debounceRendering = fn => queueMicrotask(fn);
 
 Used by `strike-fw/debug` and advanced tooling. Prefer not to touch unless you
 need hooks into the patch cycle.
+
+## Common mistakes
+
+- Writing `className` when you meant Strike's DOM-ish `class` prop.
+- Calling `render` on every state change yourself -- inside a mounted tree,
+  hooks like `useState` already trigger updates (see [first-app.md](first-app.md)).
+- Mutating props or VNodes in place instead of returning a new tree.
+- Creating a portal to a target that is not in the document yet.
+- Touching `options` in app code when [debug.md](debug.md) would do.
+
+## See also
+
+- [Concepts](concepts.md)
+- [Mount and hydrate](mount.md)
+- [Hooks](hooks.md)
+- [Debug](debug.md)

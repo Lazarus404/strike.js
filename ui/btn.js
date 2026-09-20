@@ -23,6 +23,11 @@ css`
 }
 .strike-btn--ghost { background: transparent; }
 .strike-btn--default { background: #fff; }
+.strike-btn--outline {
+  background: transparent;
+  border-color: var(--strike-accent, #0b6e4f);
+  color: var(--strike-accent, #0b6e4f);
+}
 `;
 
 export function Btn({

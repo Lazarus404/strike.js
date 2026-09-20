@@ -59,6 +59,15 @@ test('each control renders with strike- class prefix', async () => {
 	assert.equal(host.querySelector('img').getAttribute('alt'), 'x');
 });
 
+test('Btn outline variant class', async () => {
+	installDom();
+	const { h, render } = await import('../index.js');
+	const { Btn } = await import('../ui/btn.js');
+	const host = document.createElement('div');
+	render(h(Btn, { variant: 'outline' }, 'Bag'), host);
+	assert.ok(host.querySelector('.strike-btn.strike-btn--outline'));
+});
+
 test('Check indeterminate sets DOM property', async () => {
 	installDom();
 	const { h, render } = await import('../index.js');
